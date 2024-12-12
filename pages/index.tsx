@@ -26,7 +26,6 @@ const Home: NextPage = () => {
     bio.slice(-1) === "." ? "" : "."
   }
   and use language ${lang}.`;
-  setGeneratedBios;
 
   const generateBio = async (e: any) => {
     e.preventDefault();
@@ -54,8 +53,6 @@ const Home: NextPage = () => {
         }),
       });
       const data = await res.json();
-      console.log("datas api : ", data);
-
       setGeneratedBios(data.bios);
       if (data.error) {
         throw new Error(data.error);
@@ -75,7 +72,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
+    <div className="flex max-w-7xl mx-auto flex-col items-center justify-center py-8 min-h-screen bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50">
       <Head>
         <title>LinkedIn Bio Generator</title>
         <link rel="icon" href="/favicon.ico" />
@@ -83,106 +80,112 @@ const Home: NextPage = () => {
 
       <Header />
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-16">
-        <div className="relative w-36 h-12 sm:w-48 sm:h-12">
-          <Image
-            src="/logo.png"
-            fill={true}
-            alt="LinkedIn Bio Generator Logo"
-            className="object-contain"
-          />
+        {/* Hero Section */}
+        <div className="relative w-full h-[200px] sm:h-[300px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-xl flex justify-center items-center mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white text-shadow-lg">
+            Bikin Bio Media Sosial Kamu Lebih Mudah <br /> dengan Bantuan AI ✨
+          </h1>
         </div>
-        <h1 className="text-2xl sm:text-3xl mt-3 max-w-[708px] font-bold text-slate-900">
-          Bikin bio LinkedIn profesional <br />
-          dengan bantuan AI ✨
-        </h1>
-        <div className="mt-7"></div>
 
-        <div className="max-w-xl w-full">
-          <div className="flex mt-10 items-center space-x-3">
-            <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
-            <p className="text-left font-medium">
-              Masukkan pekerjaanmu{" "}
-              <span className="text-slate-500">(atau skill, minat, hobi)</span>.
-            </p>
-          </div>
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={4}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
-            placeholder={"misal: CEO Gojek"}
-          />
-          <div className="flex mb-5 items-center space-x-3">
-            <Image src="/2-black.png" width={30} height={30} alt="2 icon" />
-            <p className="text-left font-medium">Pilih bahasa.</p>
-          </div>
-          <div className="block">
+        {/* Form Section */}
+        <div className="max-w-xl w-full bg-white p-6 rounded-xl shadow-lg mt-8">
+          <div className="space-y-6">
+            {/* Step 1: Masukkan pekerjaan */}
+            <div className="flex items-center space-x-3">
+              <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
+              <p className="text-left font-medium text-slate-700">
+                Masukkan pekerjaanmu{" "}
+                <span className="text-slate-500">
+                  (atau skill, minat, hobi)
+                </span>
+                .
+              </p>
+            </div>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={4}
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 my-4 p-4 text-sm"
+              placeholder="Misal: CEO Gojek"
+            />
+
+            {/* Step 2: Pilih bahasa */}
+            <div className="flex items-center space-x-3">
+              <Image src="/2-black.png" width={30} height={30} alt="2 icon" />
+              <p className="text-left font-medium text-slate-700">
+                Pilih bahasa.
+              </p>
+            </div>
             <DropDown lang={lang} setLang={(newLang) => setLang(newLang)} />
-          </div>
 
-          {!loading && (
-            <button
-              className="bg-blue-500 rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-blue-600 w-full"
-              onClick={(e) => generateBio(e)}
-            >
-              Bikin biomu &rarr;
-            </button>
-          )}
-          {loading && (
-            <button
-              className="bg-blue-500 rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-blue-600 w-full"
-              disabled
-            >
-              <LoadingDots color="white" style="large" />
-            </button>
-          )}
+            {/* Generate Button */}
+            <div className="mt-8">
+              {!loading ? (
+                <button
+                  className="bg-blue-500 rounded-xl text-white font-medium px-6 py-3 w-full hover:bg-blue-600 transition duration-200"
+                  onClick={(e) => generateBio(e)}
+                >
+                  Bikin Biomu &rarr;
+                </button>
+              ) : (
+                <button
+                  className="bg-blue-500 rounded-xl text-white font-medium px-6 py-3 w-full opacity-70 cursor-not-allowed"
+                  disabled
+                >
+                  <LoadingDots color="white" style="large" />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Toaster */}
         <Toaster
           position="top-center"
           reverseOrder={false}
           toastOptions={{ duration: 2000 }}
         />
-        <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />
-        <div className="space-y-10 my-10">
+
+        <hr className="my-8 w-full bg-gray-200" />
+
+        {/* Bio Results Section */}
+        <div className="space-y-10 my-10 w-full">
           {generatedBios && (
             <>
-              <div>
-                <h2
-                  className="sm:text-3xl text-2xl font-bold text-slate-900 mx-auto"
-                  ref={bioRef}
-                >
-                  Bio yang dihasilkan
-                </h2>
+              <div
+                className="text-3xl font-semibold text-slate-900 text-center"
+                ref={bioRef}
+              >
+                Bio yang Dihasilkan
               </div>
-              <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
                 {generatedBios
                   .substring(generatedBios.indexOf("1") + 3)
                   .split(/2\.|3\./)
-                  .map((generatedBio) => {
-                    return (
-                      <div
-                        className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
-                        onClick={() => {
-                          navigator.clipboard.writeText(generatedBio);
-                          toast("Bio berhasil disalin", {
-                            style: {
-                              background: "#78ffa0",
-                              color: "#333",
-                            },
-                            icon: "📋",
-                          });
-                        }}
-                        key={generatedBio}
-                      >
-                        <p>{generatedBio}</p>
-                      </div>
-                    );
-                  })}
+                  .map((generatedBio, index) => (
+                    <div
+                      className="bg-white rounded-lg shadow-md p-6 hover:bg-gray-100 transition-all cursor-copy border border-gray-300"
+                      onClick={() => {
+                        navigator.clipboard.writeText(generatedBio);
+                        toast.success("Bio berhasil disalin", {
+                          style: {
+                            background: "#78ffa0",
+                            color: "#333",
+                          },
+                          icon: "📋",
+                        });
+                      }}
+                      key={index}
+                    >
+                      <p className="text-sm text-gray-800">{generatedBio}</p>
+                    </div>
+                  ))}
               </div>
             </>
           )}
         </div>
       </main>
+
       <Footer />
     </div>
   );
